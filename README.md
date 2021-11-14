@@ -17,8 +17,8 @@ From this [link](https://www.imdb.com/interfaces/) here we can get 2 interesting
        <td> <center> Movie title data </center> </td>
     </tr>
     <tr>
-       <td><img src="Names_tbl_IMDB.PNG" alt="Names" style="width: 500px; height: 150px" /> </td>
-       <td> <img src="Movies_tbl_IMDB.PNG" alt="Movies" style="width: 500px; height: 150px" /> </td>
+       <td><img src="images/Names_tbl_IMDB.PNG" alt="Names" style="width: 500px; height: 150px" /> </td>
+       <td> <img src="images/Movies_tbl_IMDB.PNG" alt="Movies" style="width: 500px; height: 150px" /> </td>
 </tr></table>
 
 
@@ -459,23 +459,6 @@ def dump_actors(actors_list, connection=None):
 
 
 ```python
-def reset_globals():
-    global Errors_list
-    Errors_list = {'Movies':[], 'Actors': []}
-    global actor_visited
-    actor_visited = []
-    global movie_visited
-    movie_visited = []
-    global relations_to_upload
-    relations_to_upload = []
-    global actors_to_upload
-    actors_to_upload = []
-    global movies_to_upload
-    movies_to_upload = []
-```
-
-
-```python
 headers = {'Accept-language': 'en', 'X-FORWARDED-FOR': '134.199.255.155'}
 Errors_list = {'Movies':[], 'Actors': []}
 actor_visited = []
@@ -625,7 +608,7 @@ async def fetch_sem(session, url, sem):
         async with session.get(url) as response:
             return await response.text()
         
-sem = asyncio.Semaphore(20)
+sem = asyncio.Semaphore(80)
 ```
 
 
@@ -702,7 +685,6 @@ def bfs_scrap(start_url, actor_q, movie_q, counter = 0): #, actor_visited=[],mov
 
 ```python
 def parse_imdb(actor_start_url):
-    reset_globals()
     actor_start_url = actor_start_url.replace('www.', '')
     sql_create_tables()
     movie_q = deque()
@@ -717,118 +699,6 @@ def parse_imdb(actor_start_url):
 ```python
 parse_imdb("https://www.imdb.com/name/nm0000246/")
 ```
-
-
-    ---------------------------------------------------------------------------
-
-    TypeError                                 Traceback (most recent call last)
-
-    ~\AppData\Local\Temp/ipykernel_22436/3401157688.py in <module>
-    ----> 1 parse_imdb("https://www.imdb.com/name/nm0000246/")
-    
-
-    ~\AppData\Local\Temp/ipykernel_22436/184482012.py in parse_imdb(actor_start_url)
-          6     actor_q = deque()
-          7     actor_q.append([actor_start_url])
-    ----> 8     return bfs_scrap(actor_start_url, actor_q=actor_q, movie_q=movie_q)
-          9 
-    
-
-    ~\AppData\Local\Temp/ipykernel_22436/3492416079.py in bfs_scrap(start_url, actor_q, movie_q, counter)
-         53     movie_visited.extend(cur_mov_ids[new_mov_mask])
-         54 
-    ---> 55     return bfs_scrap(start_url, actor_q, movie_q, counter = counter+1)
-    
-
-    ~\AppData\Local\Temp/ipykernel_22436/3492416079.py in bfs_scrap(start_url, actor_q, movie_q, counter)
-         17         nest_asyncio.apply(loop)
-         18         coroutine = get_soups_acts(current_actor_links)
-    ---> 19         current_movies_resps = loop.run_until_complete(coroutine)
-         20 
-         21         movies_to_check = []
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\site-packages\nest_asyncio.py in run_until_complete(self, future)
-         68                 raise RuntimeError(
-         69                     'Event loop stopped before Future completed.')
-    ---> 70             return f.result()
-         71 
-         72     def _run_once(self):
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\asyncio\futures.py in result(self)
-        199         self.__log_traceback = False
-        200         if self._exception is not None:
-    --> 201             raise self._exception
-        202         return self._result
-        203 
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\asyncio\tasks.py in __step(***failed resolving arguments***)
-        254                 # We use the `send` method directly, because coroutines
-        255                 # don't have `__iter__` and `__next__` methods.
-    --> 256                 result = coro.send(None)
-        257             else:
-        258                 result = coro.throw(exc)
-    
-
-    ~\AppData\Local\Temp/ipykernel_22436/428210363.py in get_soups_acts(actor_links)
-          3         coroutines = [fetch_sem(session, url[1], sem) if type(url) == tuple else\
-          4                       fetch_sem(session, url, sem) for url in actor_links]
-    ----> 5         result = await asyncio.gather(*coroutines)
-          6         return result
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\asyncio\tasks.py in __wakeup(self, future)
-        326     def __wakeup(self, future):
-        327         try:
-    --> 328             future.result()
-        329         except BaseException as exc:
-        330             # This may also be a cancellation.
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\asyncio\tasks.py in __step(***failed resolving arguments***)
-        254                 # We use the `send` method directly, because coroutines
-        255                 # don't have `__iter__` and `__next__` methods.
-    --> 256                 result = coro.send(None)
-        257             else:
-        258                 result = coro.throw(exc)
-    
-
-    ~\AppData\Local\Temp/ipykernel_22436/2372827105.py in fetch_sem(session, url, sem)
-          1 async def fetch_sem(session, url, sem):
-          2     async with sem:
-    ----> 3         async with session.get(url) as response:
-          4             return await response.text()
-          5 
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\site-packages\aiohttp\client.py in __aenter__(self)
-       1115 
-       1116     async def __aenter__(self) -> _RetType:
-    -> 1117         self._resp = await self._coro
-       1118         return self._resp
-       1119 
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\site-packages\aiohttp\client.py in _request(self, method, str_or_url, params, data, json, cookies, headers, skip_auto_headers, auth, allow_redirects, max_redirects, compress, chunked, expect100, raise_for_status, read_until_eof, proxy, proxy_auth, timeout, verify_ssl, fingerprint, ssl_context, ssl, proxy_headers, trace_request_ctx, read_bufsize)
-        402 
-        403         try:
-    --> 404             url = URL(str_or_url)
-        405         except ValueError as e:
-        406             raise InvalidURL(str_or_url) from e
-    
-
-    ~\anaconda3\envs\IMDB_scraping_proj\lib\site-packages\yarl\_url.py in __new__(cls, val, encoded, strict)
-        156             val = urlsplit(str(val))
-        157         else:
-    --> 158             raise TypeError("Constructor parameter should be str")
-        159 
-        160         if not encoded:
-    
-
-    TypeError: Constructor parameter should be str
-
 
 ## Auxiliary stuff for graphics
 
@@ -935,7 +805,7 @@ for file in os.listdir():
 
 
     
-![png](README_files/README_50_0.png)
+![png](IMDB_proj_files/IMDB_proj_49_0.png)
     
 
 
@@ -960,61 +830,61 @@ for file in os.listdir():
 
 
     
-![png](README_files/README_51_0.png)
+![png](IMDB_proj_files/IMDB_proj_50_0.png)
     
 
 
 
     
-![png](README_files/README_51_1.png)
+![png](IMDB_proj_files/IMDB_proj_50_1.png)
     
 
 
 
     
-![png](README_files/README_51_2.png)
+![png](IMDB_proj_files/IMDB_proj_50_2.png)
     
 
 
 
     
-![png](README_files/README_51_3.png)
+![png](IMDB_proj_files/IMDB_proj_50_3.png)
     
 
 
 
     
-![png](README_files/README_51_4.png)
+![png](IMDB_proj_files/IMDB_proj_50_4.png)
     
 
 
 
     
-![png](README_files/README_51_5.png)
+![png](IMDB_proj_files/IMDB_proj_50_5.png)
     
 
 
 
     
-![png](README_files/README_51_6.png)
+![png](IMDB_proj_files/IMDB_proj_50_6.png)
     
 
 
 
     
-![png](README_files/README_51_7.png)
+![png](IMDB_proj_files/IMDB_proj_50_7.png)
     
 
 
 
     
-![png](README_files/README_51_8.png)
+![png](IMDB_proj_files/IMDB_proj_50_8.png)
     
 
 
 
     
-![png](README_files/README_51_9.png)
+![png](IMDB_proj_files/IMDB_proj_50_9.png)
     
 
 
@@ -1076,13 +946,13 @@ draw_graph()
 
 
     
-![png](README_files/README_57_0.png)
+![png](IMDB_proj_files/IMDB_proj_56_0.png)
     
 
 
 
     
-![png](README_files/README_57_1.png)
+![png](IMDB_proj_files/IMDB_proj_56_1.png)
     
 
 
@@ -1093,13 +963,13 @@ draw_graph(1)
 
 
     
-![png](README_files/README_58_0.png)
+![png](IMDB_proj_files/IMDB_proj_57_0.png)
     
 
 
 
     
-![png](README_files/README_58_1.png)
+![png](IMDB_proj_files/IMDB_proj_57_1.png)
     
 
 
@@ -1110,13 +980,13 @@ draw_graph(2)
 
 
     
-![png](README_files/README_59_0.png)
+![png](IMDB_proj_files/IMDB_proj_58_0.png)
     
 
 
 
     
-![png](README_files/README_59_1.png)
+![png](IMDB_proj_files/IMDB_proj_58_1.png)
     
 
 
@@ -1127,13 +997,13 @@ draw_graph(3)
 
 
     
-![png](README_files/README_60_0.png)
+![png](IMDB_proj_files/IMDB_proj_59_0.png)
     
 
 
 
     
-![png](README_files/README_60_1.png)
+![png](IMDB_proj_files/IMDB_proj_59_1.png)
     
 
 
