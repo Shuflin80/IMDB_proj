@@ -805,7 +805,7 @@ for file in os.listdir():
 
 
     
-![png](IMDB_proj_files/IMDB_proj_49_0.png)
+![png](README_files/README_49_0.png)
     
 
 
@@ -830,61 +830,61 @@ for file in os.listdir():
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_0.png)
+![png](README_files/README_50_0.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_1.png)
+![png](README_files/README_50_1.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_2.png)
+![png](README_files/README_50_2.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_3.png)
+![png](README_files/README_50_3.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_4.png)
+![png](README_files/README_50_4.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_5.png)
+![png](README_files/README_50_5.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_6.png)
+![png](README_files/README_50_6.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_7.png)
+![png](README_files/README_50_7.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_8.png)
+![png](README_files/README_50_8.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_50_9.png)
+![png](README_files/README_50_9.png)
     
 
 
@@ -946,13 +946,13 @@ draw_graph()
 
 
     
-![png](IMDB_proj_files/IMDB_proj_56_0.png)
+![png](README_files/README_56_0.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_56_1.png)
+![png](README_files/README_56_1.png)
     
 
 
@@ -963,13 +963,13 @@ draw_graph(1)
 
 
     
-![png](IMDB_proj_files/IMDB_proj_57_0.png)
+![png](README_files/README_57_0.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_57_1.png)
+![png](README_files/README_57_1.png)
     
 
 
@@ -980,13 +980,13 @@ draw_graph(2)
 
 
     
-![png](IMDB_proj_files/IMDB_proj_58_0.png)
+![png](README_files/README_58_0.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_58_1.png)
+![png](README_files/README_58_1.png)
     
 
 
@@ -997,13 +997,13 @@ draw_graph(3)
 
 
     
-![png](IMDB_proj_files/IMDB_proj_59_0.png)
+![png](README_files/README_59_0.png)
     
 
 
 
     
-![png](IMDB_proj_files/IMDB_proj_59_1.png)
+![png](README_files/README_59_1.png)
     
 
 
