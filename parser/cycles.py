@@ -60,12 +60,11 @@ def actor_cycle(actor_q: 'collections.deque', movie_q: 'collections.deque', samp
                     globals.relations_to_upload = dump_table(globals.relations_to_upload, 'relations')
 
             except (KeyboardInterrupt, globals.ParsingError) as error:
-
-                if len(str(error)) > 0:
+                if len(str(error).split('_')) > 2:
+                    idx = 0
+                elif len(str(error)) > 0:
                     print(error)
                     idx = int(str(error).split('_')[-1])
-                elif len(str(error).split('_')) > 2:
-                    idx = 0
                 else:
                     idx = 0
                 print('len of outstanding acts: ', len(current_actor_links[i * samp + idx:]))
@@ -126,11 +125,14 @@ def movie_cycle(actor_q, movie_q, samp):
                     globals.movies_to_upload = dump_table(globals.movies_to_upload, 'movies')
 
             except (KeyboardInterrupt, globals.ParsingError) as error:
-
-                if len(str(error)) > 0:
+                if len(str(error).split('_')) > 2:
+                    idx = 0
+                elif len(str(error)) > 0:
+                    print(error)
                     idx = int(str(error).split('_')[-1])
                 else:
                     idx = 0
+
                 print('len of outstanding movs: ', len(current_movie_links[i * samp + idx:]))
                 movie_q.insert(0, current_movie_links[i * samp + idx:])
                 print('len of movie_q after insert: ', len(movie_q))

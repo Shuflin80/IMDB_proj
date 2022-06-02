@@ -70,7 +70,7 @@ def get_movies_by_actor_soup(actor_page_soup: BeautifulSoup, index: int) -> tupl
             if actor_page_soup.find('meta', attrs={'name': True}):
                 if actor_page_soup.find('meta')['name'] == 'MSSmartTagsPreventParsing':
                     print('oops')
-                    raise globals.ParsingError(f'sleep_{index}')
+                    raise globals.ParsingError(f'sleep_notprocessed_{index}')
             else:
                 raise KeyboardInterrupt(f'_{index}')
 
