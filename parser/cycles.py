@@ -64,6 +64,8 @@ def actor_cycle(actor_q: 'collections.deque', movie_q: 'collections.deque', samp
                 if len(str(error)) > 0:
                     print(error)
                     idx = int(str(error).split('_')[-1])
+                elif len(str(error).split('_')) > 2:
+                    idx = 0
                 else:
                     idx = 0
                 print('len of outstanding acts: ', len(current_actor_links[i * samp + idx:]))

@@ -54,7 +54,6 @@ def bfs_separated(actor_q, movie_q, counter=0, samp=100, mode='a', cache=False, 
             globals.movies_to_upload = dump_table(globals.movies_to_upload, 'movies')
             globals.relations_to_upload = dump_table(globals.relations_to_upload, 'relations')
 
-
             print(f'Results saved to {fold_name}')
             if str(e).split('_')[0] == 'sleep':
                 print(f'{datetime.datetime.now().strftime("%H:%M:%S")} - sleeping...')
