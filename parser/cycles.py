@@ -3,7 +3,6 @@ import aiohttp
 import asyncio
 import tqdm
 import globals
-import nest_asyncio
 
 from math import ceil
 from bs4 import BeautifulSoup
@@ -17,11 +16,12 @@ def actor_cycle(actor_q: 'collections.deque', movie_q: 'collections.deque', samp
     while actor_q:
         current_actor_links = actor_q.popleft()
         print('batches in actor_q remaining: ', len(actor_q))
-        print('len of an act batch: ', len(current_actor_links))
+
         cur_act_ids = np.array([i.split('/')[-2] for i in current_actor_links])
 
         new_act_mask = [x not in globals.actor_visited for x in cur_act_ids]
         current_actor_links = np.array(current_actor_links)[new_act_mask]
+        print('len of an act batch: ', len(current_actor_links))
 
         for i in tqdm.tqdm(range(ceil(len(current_actor_links) / samp))):
             try:
@@ -29,7 +29,6 @@ def actor_cycle(actor_q: 'collections.deque', movie_q: 'collections.deque', samp
                 # batch of links to parse from all deque_pop (presumably just one)
                 uploaded_links = current_actor_links[i * samp:(i + 1) * samp]
                 try:
-                    #nest_asyncio.apply()
 
                     current_movies_resps = asyncio.run(get_soups(uploaded_links, globals.sem))
                 except (aiohttp.ServerDisconnectedError, aiohttp.ClientOSError, KeyboardInterrupt) as sd:
@@ -56,7 +55,9 @@ def actor_cycle(actor_q: 'collections.deque', movie_q: 'collections.deque', samp
                 if len(globals.actors_to_upload) > 10000:
                     globals.actors_to_upload = dump_table(globals.actors_to_upload, 'actors')
 
-                if len(globals.relations_to_upload) > 25000:
+                if len(globals.relations_to_upload) > 30000:
+                    globals.actors_to_upload = dump_table(globals.actors_to_upload, 'actors')
+                    globals.movies_to_upload = dump_table(globals.movies_to_upload, 'movies')
                     globals.relations_to_upload = dump_table(globals.relations_to_upload, 'relations')
 
             except (KeyboardInterrupt, globals.ParsingError) as error:
@@ -90,12 +91,14 @@ def movie_cycle(actor_q, movie_q, samp):
     while movie_q:
         current_movie_links = movie_q.popleft()
         print('batches in movie_q remaining: ', len(movie_q))
-        print('len of a mov batch: ', len(current_movie_links))
+
         cur_mov_ids = np.array([m.split('/')[-2] for m in current_movie_links])
 
         new_mov_mask = [x not in globals.movie_visited for x in cur_mov_ids]
         current_mov_links = current_movie_links[new_mov_mask]
+        print('len of a mov batch: ', len(current_movie_links))
         current_mov_links = [x + 'fullcredits' for x in current_mov_links]
+
         for i in tqdm.tqdm(range(ceil(len(current_mov_links) / samp))):
             try:
                 uploaded_links = current_mov_links[i * samp:(i + 1) * samp]

@@ -24,3 +24,4 @@ def parse_imdb(actor_start_url, cache=False, truncate=False):
     actor_q = deque()
     actor_q.append(actor_start_url)
     return bfs_separated(actor_q=actor_q, movie_q=movie_q, cache=cache)
+
