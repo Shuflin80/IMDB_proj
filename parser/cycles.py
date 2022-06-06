@@ -152,5 +152,3 @@ def movie_cycle(actor_q, movie_q, samp):
             globals.movie_visited.update(batch_mov_ids)
 
     return actor_q, movie_q, 'a'
-
-

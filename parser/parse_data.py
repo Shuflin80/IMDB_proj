@@ -9,14 +9,15 @@ def get_actors_by_movie_soup(cast_page_soup: BeautifulSoup, url: str, index: int
         # global Errors_list
         try:
             mv_id = cast_page_soup.find('h3').find('a')['href'].split('/')[-2]
-        except (AttributeError, TypeError, KeyboardInterrupt):
-            globals.Errors_list['Movies'].append(cast_page_soup)
+        except (AttributeError, TypeError, KeyboardInterrupt) as e:
+            print(e)
             if cast_page_soup.find('meta', attrs={'name': True}):
                 if cast_page_soup.find('meta')['name'] == 'MSSmartTagsPreventParsing':
                     print('oops')
                     raise globals.ParsingError(f'sleep_notprocessed_{index}')
             else:
-                raise KeyboardInterrupt(f'_{index}')
+                globals.Errors_list['Movies'].append(cast_page_soup)
+                raise KeyboardInterrupt
 
         try:
             act_res_set = cast_page_soup.find('div', attrs={'id': 'fullcredits_content'}) \
@@ -31,7 +32,7 @@ def get_actors_by_movie_soup(cast_page_soup: BeautifulSoup, url: str, index: int
             globals.Errors_list['Movies'].append(mv_id)
             print(e)
             print('ERRORMOV')
-            act_res_set = 0
+            act_res_set = []
 
         for actor in range(len(act_res_set)):
             try:
@@ -45,13 +46,6 @@ def get_actors_by_movie_soup(cast_page_soup: BeautifulSoup, url: str, index: int
                 globals.Errors_list['Actors'].append(actor)
                 print('ERRORACT')
 
-
-    #         if len(movies_to_upload) > 1000:
-    #             dump_movies(movies_to_upload)
-    #             print('movies uploaded!!!')
-    except KeyboardInterrupt:
-        raise KeyboardInterrupt(f'{index}')
-
     return actor_list, mv_id
 
 
@@ -63,8 +57,8 @@ def get_movies_by_actor_soup(actor_page_soup: BeautifulSoup, index: int) -> tupl
         try:
             act_id = actor_page_soup.find('link', attrs={'rel': 'canonical'})['href'].split('/')[-2]
             act_name = actor_page_soup.find('h1').find('span', attrs={'class': 'itemprop'}).text
-        except (AttributeError, TypeError, KeyboardInterrupt) as a:
-            print(a)
+        except (AttributeError, TypeError, KeyboardInterrupt) as e:
+            print(e)
             print("ERROR HERE")
             # print(actor_page_soup)
             if actor_page_soup.find('meta', attrs={'name': True}):
@@ -72,7 +66,8 @@ def get_movies_by_actor_soup(actor_page_soup: BeautifulSoup, index: int) -> tupl
                     print('oops')
                     raise globals.ParsingError(f'sleep_notprocessed_{index}')
             else:
-                raise KeyboardInterrupt(f'_{index}')
+                globals.Errors_list['Actors'].append(actor_page_soup)
+                raise KeyboardInterrupt
 
         movies_to_omit = ['(\s|.)*TV Series(\s|.)*', 'Short', 'Video Game', 'Video short', 'Video', 'TV Movie',
                           '(\s|.)*TV Mini-Series(\s|.)*',
@@ -124,7 +119,5 @@ def get_movies_by_actor_soup(actor_page_soup: BeautifulSoup, index: int) -> tupl
     #         if len(actors_to_upload) > 1000:
     #             dump_actors(actors_to_upload)
     #             print('actors uploaded!!!')
-    except KeyboardInterrupt:
-        raise KeyboardInterrupt(f'{index}')
 
     return movies_list, acts, rels
