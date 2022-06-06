@@ -53,8 +53,11 @@ def dump_table(vals_list: Iterable, table_name: str, conn=None, close_conn: bool
         close_conn = True
         conn = psycopg2.connect(**connection_dict)
     with conn.cursor() as cursor:
-        psycopg2.extras.execute_batch(cursor, f"""
-        INSERT INTO {table_name} VALUES (%s, %s, %s);""", vals_list)
+        if table_name == 'actors':
+            sql_line = f"""INSERT INTO {table_name} VALUES (%s, %s);"""
+        else:
+            sql_line = f"""INSERT INTO {table_name} VALUES (%s, %s, %s);"""
+        psycopg2.extras.execute_batch(cursor, sql_line, vals_list)
     conn.commit()
     if close_conn:
         conn.close()
